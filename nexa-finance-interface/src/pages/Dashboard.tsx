@@ -4,14 +4,15 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
-  Cell,
   Legend,
   Pie,
   PieChart,
-  type PieLabelRenderProps,
+  Sector,
   Tooltip,
   XAxis,
   YAxis,
+  type PieLabelRenderProps,
+  type PieSectorShapeProps,
 } from "recharts";
 import Cards from "../components/Cards";
 import MonthYearSelect from "../components/MonthYearSelect";
@@ -19,9 +20,19 @@ import {
   getTransactionsMonthly,
   getTransactionsSummary,
 } from "../services/transactionService";
-import type { CategorySummary } from "../types/Category";
 import type { MonthlyItem, TransactionSummary } from "../types/Transactions";
 import { formatCurrency } from "../utils/Formatters";
+import type { CategorySummary } from "../types/Category";
+
+// Tradução: "Pega tudo do PieLabelRenderProps, MENOS (omit) o payload.
+// E aí adiciona o payload novo com o tipo CategorySummary."
+type ChartLabelProps = Omit<PieLabelRenderProps, "payload"> & {
+  payload: CategorySummary;
+};
+
+type ChartShapeProps = Omit<PieLabelRenderProps, "payload"> & {
+  payload: CategorySummary;
+};
 
 const initialSummary: TransactionSummary = {
   balance: 0,
@@ -30,10 +41,37 @@ const initialSummary: TransactionSummary = {
   totalIncomes: 0,
 };
 
-// Tradução: "Pega tudo do PieLabelRenderProps, MENOS (omit) o payload.
-// E aí adiciona o payload novo com o tipo CategorySummary."
-type ChartLabelProps = Omit<PieLabelRenderProps, "payload"> & {
-  payload: CategorySummary;
+const RenderPieChart = (props: PieSectorShapeProps) => {
+  const {payload} = props as ChartShapeProps
+
+  return (
+    <Sector {...props} fill={payload.categoryColor}>
+
+    </Sector>
+  )
+}
+
+// É necessário colocar na entrada de parametros o tipo PieLabelRenderProps
+// pois o componente <Pie> promete chamar a função label passando um objeto genérico
+// (PieLabelRenderProps). Mas estamos criando uma função que EXIGE receber um objeto
+//  específico (ChartLabelProps). Se o componente mandar algo que não tem o
+// CategorySummary a função quebraria
+const renderPieChartLabel = (props: PieLabelRenderProps) => {
+  const { x, y, textAnchor, percent, payload, name } =
+    props as ChartLabelProps;
+
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={textAnchor}
+      dominantBaseline="central"
+      style={{ fontSize: "12px", fontWeight: "bold" }}
+      fill={payload.categoryColor}
+    >
+      {`${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
+    </text>
+  );
 };
 
 const Dashboard = () => {
@@ -58,8 +96,6 @@ const Dashboard = () => {
     async function loadTransactionsMonthly() {
       const result = await getTransactionsMonthly(month, year, 4);
 
-      console.log(result);
-
       setMonthlyItemsData(result.history);
     }
 
@@ -68,29 +104,6 @@ const Dashboard = () => {
 
   const formatToolTipValue = (value: number | string | undefined): string => {
     return formatCurrency(typeof value === "number" ? value : 0);
-  };
-
-  // É necessário colocar na entrada de parametros o tipo PieLabelRenderProps
-  // pois o componente <Pie> promete chamar a função label passando um objeto genérico
-  // (PieLabelRenderProps). Mas estamos criando uma função que EXIGE receber um objeto
-  //  específico (ChartLabelProps). Se o componente mandar algo que não tem o
-  // CategorySummary a função quebraria
-  const renderPieChartLabel = (props: PieLabelRenderProps) => {
-    const { x, y, textAnchor, percent, payload, name } =
-      props as ChartLabelProps;
-
-    return (
-      <text
-        x={x}
-        y={y}
-        textAnchor={textAnchor}
-        dominantBaseline="central"
-        style={{ fontSize: "12px", fontWeight: "bold" }}
-        fill={payload.categoryColor}
-      >
-        {`${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
-      </text>
-    );
   };
 
   return (
@@ -153,12 +166,12 @@ const Dashboard = () => {
           {summary.expensesByCategory.length > 0 ? (
             <div className="h-72 mt-4">
               <PieChart
-                style={{
-                  width: "100%",
-                  maxHeight: "100%",
-                  aspectRatio: 1,
-                }}
-                responsive
+              style={{
+                width: "100%",
+                maxHeight: "100%",
+                aspectRatio: 1,
+              }}
+              responsive
               >
                 <Pie
                   data={summary.expensesByCategory}
@@ -167,13 +180,11 @@ const Dashboard = () => {
                   outerRadius={80}
                   dataKey="amount"
                   nameKey="categoryName"
+                  isAnimationActive={true}
+                  shape={RenderPieChart}
                   label={renderPieChartLabel}
-                >
-                  {summary.expensesByCategory.map((entry) => (
-                    <Cell key={entry.categoryId} fill={entry.categoryColor} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(v) => formatToolTipValue(v?.valueOf.name)} />
+                />
+                <Tooltip formatter={(value) => formatToolTipValue(Number(value))} />
               </PieChart>
             </div>
           ) : (
@@ -222,7 +233,7 @@ const Dashboard = () => {
                     borderColor: "#2a2a2a",
                   }}
                   cursor={{ fill: "rgba(255, 255, 255, 0.2)" }}
-                  formatter={(v) => formatToolTipValue(v?.valueOf.name)}
+                  formatter={(value) => formatToolTipValue(Number(value))}
                 />
                 <Legend />
                 <Bar

@@ -3,18 +3,12 @@ import Button from "./Button";
 interface GoogleLoginProps {
   isLoading: boolean;
   onClick: () => void;
+  className: string
 }
 
-const GoogleLoginButton = ({ isLoading, onClick }: GoogleLoginProps) => {
+ const GoogleLogo = () => {
   return (
-    <Button
-      onClick={onClick}
-      isLoading={isLoading}
-      fullWidth
-      type="button"
-      className="flex items-center justify-center"
-    >
-      <svg className="h-5 w-5 mr-2" aria-hidden="true" viewBox="0 0 24 24">
+    <svg className="h-5 w-5 mr-2" aria-hidden="true" viewBox="0 0 24 24">
         <path
           d="M12.0003 4.75C13.7703 4.75 15.3553 5.36 16.6053 6.45L20.0303
           3.02C17.9502 1.15 15.2353 0 12.0003 0C7.31031 0 3.25531 2.69 1.28931
@@ -40,6 +34,19 @@ const GoogleLoginButton = ({ isLoading, onClick }: GoogleLoginProps) => {
           fill="#34A853"
         />
       </svg>
+  )
+}
+
+const GoogleLoginButton = ({ isLoading, onClick, className }: GoogleLoginProps) => {
+  return (
+    <Button
+      onClick={onClick}
+      isLoading={isLoading}
+      fullWidth
+      type="button"
+      className={`flex items-center justify-center ${className}`}
+    >
+      <GoogleLogo/>
       Entrar com o Google
     </Button>
   );

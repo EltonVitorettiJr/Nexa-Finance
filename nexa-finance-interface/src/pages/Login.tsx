@@ -45,7 +45,7 @@ const Login = () => {
           </p>
         </section>
 
-        <GoogleLoginButton onClick={handleLogin} isLoading={false} />
+        <GoogleLoginButton onClick={handleLogin} isLoading={false} className="text-gray-100" />
 
         {authState.error && (
           <div className="bg-red-50 text-center text-red-700 mt-4">
