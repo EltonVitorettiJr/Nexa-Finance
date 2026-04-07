@@ -5,15 +5,12 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsx watch src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "start": "tsx ./src/server.ts"
   },
   "keywords": [],
-  "authors": "Elton Antônio Vitoretti Junior, Gabriela Ferreira Nicoleti, Rafael Furtado, Victor Lacerda Fatala e Willian Fernando Cena Pereira",
   "license": "ISC",
-  "description": "Um Projeto de organização financeira desenvolvido na Unisagrado sob tutoria do Prof. Mestre Victor Hugo Braguim Canto.",
   "devDependencies": {
-    "@biomejs/biome": "2.3.8",
     "@types/node": "^24.10.1",
     "prisma": "^5.10.2",
     "tsx": "^4.21.0",

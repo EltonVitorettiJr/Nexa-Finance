@@ -12,12 +12,13 @@ model Category {
   name      String          // Nome da categoria
   color     String          // Cor da categoria (hex ou nome)
   type      TransactionType // Tipo da transação: expense ou income 
+  userId    String          // Id do usuário dono da categoria
   createdAt DateTime        @default(now()) // Data de criação do registro
   updatedAt DateTime        @updatedAt      // Data da última atualização
 
   transactions Transaction[] // Transações relacionadas a essa categoria (relação 1:N)
 
-  @@unique([name, type]) // Evitar conflitos de duas categorias com mesmo nome e tipo
+  @@unique([name, type, userId]) // Evitar conflitos de duas categorias com mesmo nome e tipo
 }
 
 enum TransactionType {

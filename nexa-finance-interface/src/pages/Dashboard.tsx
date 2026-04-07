@@ -7,12 +7,12 @@ import {
   Legend,
   Pie,
   PieChart,
+  type PieLabelRenderProps,
+  type PieSectorShapeProps,
   Sector,
   Tooltip,
   XAxis,
   YAxis,
-  type PieLabelRenderProps,
-  type PieSectorShapeProps,
 } from "recharts";
 import Cards from "../components/Cards";
 import MonthYearSelect from "../components/MonthYearSelect";
@@ -20,9 +20,9 @@ import {
   getTransactionsMonthly,
   getTransactionsSummary,
 } from "../services/transactionService";
+import type { CategorySummary } from "../types/Category";
 import type { MonthlyItem, TransactionSummary } from "../types/Transactions";
 import { formatCurrency } from "../utils/Formatters";
-import type { CategorySummary } from "../types/Category";
 
 // Tradução: "Pega tudo do PieLabelRenderProps, MENOS (omit) o payload.
 // E aí adiciona o payload novo com o tipo CategorySummary."
@@ -42,14 +42,10 @@ const initialSummary: TransactionSummary = {
 };
 
 const RenderPieChart = (props: PieSectorShapeProps) => {
-  const {payload} = props as ChartShapeProps
+  const { payload } = props as ChartShapeProps;
 
-  return (
-    <Sector {...props} fill={payload.categoryColor}>
-
-    </Sector>
-  )
-}
+  return <Sector {...props} fill={payload.categoryColor}></Sector>;
+};
 
 // É necessário colocar na entrada de parametros o tipo PieLabelRenderProps
 // pois o componente <Pie> promete chamar a função label passando um objeto genérico
@@ -57,8 +53,7 @@ const RenderPieChart = (props: PieSectorShapeProps) => {
 //  específico (ChartLabelProps). Se o componente mandar algo que não tem o
 // CategorySummary a função quebraria
 const renderPieChartLabel = (props: PieLabelRenderProps) => {
-  const { x, y, textAnchor, percent, payload, name } =
-    props as ChartLabelProps;
+  const { x, y, textAnchor, percent, payload, name } = props as ChartLabelProps;
 
   return (
     <text
@@ -166,12 +161,12 @@ const Dashboard = () => {
           {summary.expensesByCategory.length > 0 ? (
             <div className="h-72 mt-4">
               <PieChart
-              style={{
-                width: "100%",
-                maxHeight: "100%",
-                aspectRatio: 1,
-              }}
-              responsive
+                style={{
+                  width: "100%",
+                  maxHeight: "100%",
+                  aspectRatio: 1,
+                }}
+                responsive
               >
                 <Pie
                   data={summary.expensesByCategory}
@@ -184,7 +179,9 @@ const Dashboard = () => {
                   shape={RenderPieChart}
                   label={renderPieChartLabel}
                 />
-                <Tooltip formatter={(value) => formatToolTipValue(Number(value))} />
+                <Tooltip
+                  formatter={(value) => formatToolTipValue(Number(value))}
+                />
               </PieChart>
             </div>
           ) : (

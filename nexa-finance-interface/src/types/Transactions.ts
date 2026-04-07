@@ -31,6 +31,13 @@ export interface CreateTransactionDTO {
   amount: number;
 }
 
+export interface CreateCategoryDTO {
+  name: string;
+  color: string;
+  type: TransactionType;
+  userId: string;
+}
+
 export interface TransactionFilter {
   month: number;
   year: number;

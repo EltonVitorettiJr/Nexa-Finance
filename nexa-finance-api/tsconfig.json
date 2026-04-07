@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022", // Transpila para uma versão moderna do JavaScript (ES2022)
-    "module": "commonjs", // Usa o sistema de módulos CommonJS, necessário para Node.js
-    "moduleResolution": "node", // Resolve os imports como o Node faz, buscando em node_modules
+    "module": "es2022", // Usa o sistema de módulos CommonJS, necessário para Node.js
+    "moduleResolution": "bundler", // Resolve os imports como o Node faz, buscando em node_modules
     "lib": ["ES2022"], // Permite usar funcionalidades da linguagem baseadas no ES2022
     "rootDir": "src", // Diretório onde está o código-fonte (entrada)
     "outDir": "dist", // Diretório onde os arquivos compilados serão salvos (saída)

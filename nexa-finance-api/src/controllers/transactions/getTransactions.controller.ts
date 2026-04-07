@@ -48,6 +48,7 @@ export const getTransactions = async (
             color: true,
             name: true,
             type: true,
+            userId: true,
           },
         },
       },
@@ -55,6 +56,6 @@ export const getTransactions = async (
 
     return reply.status(200).send(transactions);
   } catch (err) {
-    return reply.status(500).send({ error: err });
+    reply.status(500).send(`❌Erro interno no servidor: ${err}`);
   }
 };

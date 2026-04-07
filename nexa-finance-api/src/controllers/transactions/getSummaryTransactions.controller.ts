@@ -81,6 +81,6 @@ export const getSummaryTransactions = async (
 
     return reply.status(200).send(summary);
   } catch (err) {
-    return reply.status(500).send({ error: err });
+    reply.status(500).send(`❌Erro interno no servidor: ${err}`);
   }
 };

@@ -35,6 +35,6 @@ export const deleteTransaction = async (
 
     return reply.status(200).send("Transação deletada com sucesso!");
   } catch (err) {
-    return reply.status(500).send(err);
+    reply.status(500).send(`❌Erro interno no servidor: ${err}`);
   }
 };

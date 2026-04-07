@@ -1,0 +1,17 @@
+{
+  "name": "nexa-finance",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces": [
+    "nexa-finance-api",
+    "nexa-finance-interface"
+  ],
+  "private": true,
+  "repository": "https://github.com/EltonVitorettiJr/Nexa-Finance.git",
+  "authors": "Elton Antônio Vitoretti Junior, Gabriela Ferreira Nicoleti, Rafael Furtado, Victor Lacerda Fatala e Willian Fernando Cena Pereira",
+  "description": "Um Projeto de organização financeira desenvolvido na Unisagrado sob tutoria do Prof. Mestre Victor Hugo Braguim Canto.",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.10"
+  }
+}

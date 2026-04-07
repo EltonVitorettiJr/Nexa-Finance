@@ -13,7 +13,7 @@ export const authMiddleware = async (
 ): Promise<void> => {
   const authHeader = request.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!authHeader?.startsWith("Bearer ")) {
     console.log(request.headers.authorization);
 
     return reply

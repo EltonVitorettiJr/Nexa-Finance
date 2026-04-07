@@ -2,7 +2,7 @@ import { TransactionType } from "@prisma/client";
 import { ObjectId } from "mongodb";
 import * as z from "zod";
 
-const isValidObjectId = (id: string): boolean => ObjectId.isValid(id);
+export const isValidObjectId = (id: string): boolean => ObjectId.isValid(id);
 
 export const createTransactionSchema = z.object({
   description: z.string().min(1, "A descrição é obrigatória."),

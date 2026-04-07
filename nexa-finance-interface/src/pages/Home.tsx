@@ -106,8 +106,8 @@ const Home = () => {
               Pronto Para Organizar suas Finanças?
             </h2>
             <p className="text-white/90 max-w-2xl mx-auto mb-8">
-              Comece a usar a Nexa hoje mesmo e tenha o controle total sobre
-              seu dinheiro. É gratuito e fácil de usar!
+              Comece a usar a Nexa hoje mesmo e tenha o controle total sobre seu
+              dinheiro. É gratuito e fácil de usar!
             </p>
             <Button
               onClick={() => navigate("/login")}

@@ -1,7 +1,7 @@
+import { Activity, LogIn, LogOut, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
-import { Activity, LogIn, LogOut, Menu, X } from "lucide-react";
 
 interface NavLink {
   name: string;
@@ -9,13 +9,13 @@ interface NavLink {
 }
 
 const Header = () => {
-  const {authState, signOut} = useAuth();
-  const {pathname} = useLocation();
+  const { authState, signOut } = useAuth();
+  const { pathname } = useLocation();
 
   //"!!" transforma um valor em boolean, se tiver algo true, se não false.
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const isAuthenticated: boolean = !!authState.user
+  const isAuthenticated: boolean = !!authState.user;
 
   const navLink: NavLink[] = [
     { name: "Dashboard", path: "/dashboard" },
@@ -23,50 +23,64 @@ const Header = () => {
   ];
 
   const renderAvatar = () => {
-    if (!authState.user) return null
+    if (!authState.user) return null;
 
     if (authState.user.photoURL) {
-       return <img src={authState.user.photoURL}
-      alt="avatar do usuário"
-      className="w-8 h-8 rounded-full border border-gray-700"/>
+      return (
+        <img
+          src={authState.user.photoURL}
+          alt="avatar do usuário"
+          className="w-8 h-8 rounded-full border border-gray-700"
+        />
+      );
     }
 
-    return (<div className="w-8 h-8 rounded-full bg-primary-500
-      flex items-center justify-center text-white font-medium">
+    return (
+      <div
+        className="w-8 h-8 rounded-full bg-primary-500
+      flex items-center justify-center text-white font-medium"
+      >
         {authState.user.displayName?.charAt(0)}
-      </div>)
-  }
+      </div>
+    );
+  };
 
   const changeMenu = (): void => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   return (
     <header className="bg-gray-900 border-b border-gray-700">
       <div className="container-app">
-
         {/* LOGO */}
         <div className="flex justify-between items-center py-4">
-          <Link to="/" className="flex justify-center items-center gap-1 text-primary-500 font-bold">
-            <Activity className="h-6 w-6"/>
-            nexafinance
+          <Link
+            to="/"
+            className="flex justify-center items-center gap-1 text-primary-500 font-bold text-xl"
+          >
+            <Activity className="h-6 w-6" />
+            NexaFinance
           </Link>
 
           {/* MENU DESKTOP */}
           {isAuthenticated && (
             <nav className="hidden md:flex space-x-3">
-            {navLink.map(link => (
-              <Link key={link.path} to={link.path} className={
-                `${
-                  pathname === link.path
-                  ? "text-primary-500 bg-primary-500/10 rounded-md h-10 px-3 py-2"
-                  : "text-gray-400 h-10 px-3 py-2 hover:text-primary-500 hover:bg-primary-500/5 rounded-md"}
+              {navLink.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`${
+                    pathname === link.path
+                      ? "text-primary-500 bg-primary-500/10 rounded-md h-10 px-3 py-2"
+                      : "text-gray-400 h-10 px-3 py-2 hover:text-primary-500 hover:bg-primary-500/5 rounded-md"
+                  }
                   flex items-center
-                `}>
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+                `}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
           )}
 
           {/* LOGOUT OU LOGIN */}
@@ -79,23 +93,24 @@ const Header = () => {
                   {authState.user?.displayName}
                 </span>
 
-                <button type="button"
-                onClick={signOut}
-                className=" hover:text-red-300
+                <button
+                  type="button"
+                  onClick={signOut}
+                  className=" hover:text-red-300
                   p-2 rounded-full hover:bg-red-500/20
                   transition-all cursor-pointer"
                 >
-                  <LogOut className="text-gray-300">
-
-                  </LogOut>
+                  <LogOut className="text-gray-300"></LogOut>
                 </button>
               </div>
             ) : (
               <Link to="/login">
-                <LogIn className="bg-primary-500 text-gray-900
+                <LogIn
+                  className="bg-primary-500 text-gray-900
                 font-semibold px-5 py-2.5 rounded-xl flex
                 items-center justify-center hover:bg-primary-500
-                transition-all"/>
+                transition-all"
+                />
               </Link>
             )}
           </div>
@@ -107,64 +122,67 @@ const Header = () => {
               className="text-gray-400 p-2 rounded-lg
               active:bg-gray-800 transition-all"
               onClick={changeMenu}
-              >
-              {isOpen ? (<X size={24}/>) : (<Menu size={24}/>)}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-          {isOpen && (
+        {isOpen && (
+          <div>
             <div>
-              <div>
-                {isAuthenticated ? (
-                  <>
-                    <nav className="space-y-1 mb-2">
-                      {navLink.map((link) => (
-                        <Link
-                          key={link.path}
-                          to={link.path}
-                          className={`block px-3 py-3 rounded-lg
-                            ${pathname === link.path
-                              ? "bg-gray-800 text-primary-500 font-medium"
-                              : "text-gray-400 hover:bg-gray-800 hover:text-primary-500"}`}
-                          onClick={() => setIsOpen(!isOpen)}
-                        >
-                          {link.name}
-                        </Link>
-                      ))}
-                    </nav>
+              {isAuthenticated ? (
+                <>
+                  <nav className="space-y-1 mb-2">
+                    {navLink.map((link) => (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        className={`block px-3 py-3 rounded-lg
+                            ${
+                              pathname === link.path
+                                ? "bg-gray-800 text-primary-500 font-medium"
+                                : "text-gray-400 hover:bg-gray-800 hover:text-primary-500"
+                            }`}
+                        onClick={() => setIsOpen(!isOpen)}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </nav>
 
-                    <div className="flex items-center justify-between py-3
-                    border-t border-gray-700" >
-                      <div className="flex items-center space-x-2">
-                        {renderAvatar()}
-                        <span>{authState.user?.displayName}</span>
-                      </div>
-                      <button
+                  <div
+                    className="flex items-center justify-between py-3
+                    border-t border-gray-700"
+                  >
+                    <div className="flex items-center space-x-2">
+                      {renderAvatar()}
+                      <span>{authState.user?.displayName}</span>
+                    </div>
+                    <button
                       type="button"
                       onClick={signOut}
                       className="text-gray-400 hover:text-red-300
                         p-2 rounded-full hover:bg-red-500/20
                         transition-all cursor-pointer"
-                      >
-                        <LogOut  size={20}/>
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    to="/login"
-                    className="bg-primary-500 tex to-gray-800 font-semibold
+                    >
+                      <LogOut size={20} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  className="bg-primary-500 tex to-gray-800 font-semibold
                     rounded-2xl flex items-center px-5 py-2.5 justify-center
                     hover:bg-primary-500"
-                    onClick={() => setIsOpen(!isOpen)}
-                  
-                  >
-                    Entrar
-                  </Link>
-                )}
-              </div>
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  Entrar
+                </Link>
+              )}
             </div>
-          )}
+          </div>
+        )}
       </div>
     </header>
   );

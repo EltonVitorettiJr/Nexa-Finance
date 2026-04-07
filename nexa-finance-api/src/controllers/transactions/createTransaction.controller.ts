@@ -51,6 +51,6 @@ export const createTransaction = async (
 
     return reply.status(201).send(newTransaction);
   } catch (err) {
-    return reply.status(500).send({ message: `❌ ${err}` });
+    reply.status(500).send(`❌Erro interno no servidor: ${err}`);
   }
 };

@@ -21,7 +21,7 @@ const Input = ({
   const InputId = id || generatedId;
 
   return (
-    <div className={`${fullWidth ? "w-full" : ""}mb-1`}>
+    <div className={`${fullWidth ? "w-full" : ""} mb-1`}>
       {label && (
         <label
           htmlFor={InputId}
