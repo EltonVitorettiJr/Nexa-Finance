@@ -18,7 +18,7 @@ export const createCategory = async (
   const result = createCategorySchema.safeParse(request.body);
 
   if (!result.success) {
-    return reply.status(401).send("❌Dados inválidos.");
+    return reply.status(401).send(`❌Dados inválidos. Error: ${result.error}`);
   }
 
   const { color, name, type } = result.data;
@@ -33,7 +33,7 @@ export const createCategory = async (
           mode: "insensitive",
         },
         type: type,
-        userId: request.userId,
+        OR: [{ userId: userId }, { userId: "global" }],
       },
     });
 

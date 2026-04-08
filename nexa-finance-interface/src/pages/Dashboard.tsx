@@ -132,10 +132,10 @@ const Dashboard = () => {
 
         <Cards
           title="Receitas"
-          icon={<ArrowUp className="text-primary-500" size={20} />}
+          icon={<ArrowUp className="text-green-500 font-medium" size={20} />}
           hover
         >
-          <p className={"text-2xl font-semibold mt-2 text-primary-500"}>
+          <p className={"text-2xl font-semibold mt-2 text-green-500"}>
             {formatCurrency(summary.totalIncomes)}
           </p>
         </Cards>

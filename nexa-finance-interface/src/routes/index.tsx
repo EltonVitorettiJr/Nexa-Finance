@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { ToastContainer, type ToastContainerProps } from "react-toastify";
 import { AuthProvider } from "../context/AuthContext";
 import AppLayout from "../layout/App.layout";
-import { CategoryForm } from "../pages/CategoryForm";
+import { Categories } from "../pages/Categories";
 import Dashboard from "../pages/Dashboard";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
@@ -38,7 +38,7 @@ const AppRoutes = () => {
                 path="/nova-transacao"
                 element={<TransactionForm />}
               ></Route>
-              <Route path="/nova-categoria" element={<CategoryForm />}></Route>
+              <Route path="/categorias" element={<Categories />}></Route>
             </Route>
           </Route>
 

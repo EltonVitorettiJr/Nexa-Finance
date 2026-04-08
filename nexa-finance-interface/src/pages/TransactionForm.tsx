@@ -102,6 +102,8 @@ export const TransactionForm = () => {
 
       await createTransaction(transactionData);
 
+      setFormData(initialFormData);
+
       toast.success("Transação adicionada com sucesso!");
     } catch (err) {
       toast.error("Erro ao cadastrar transação, tente novamente.");

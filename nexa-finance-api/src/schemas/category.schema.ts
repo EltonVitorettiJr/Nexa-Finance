@@ -12,7 +12,6 @@ export const createCategorySchema = z.object({
 
 export const deleteCategorySchema = z.object({
   id: z.string().refine(isValidObjectId, "Id de Categoria inválido."),
-  userId: z.string(),
 });
 
 export type DeleteCategoryParams = z.infer<typeof deleteCategorySchema>;

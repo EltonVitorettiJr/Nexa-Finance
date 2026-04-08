@@ -20,6 +20,7 @@ const Header = () => {
   const navLink: NavLink[] = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "Transações", path: "/transacoes" },
+    { name: "Categorias", path: "/categorias" },
   ];
 
   const renderAvatar = () => {

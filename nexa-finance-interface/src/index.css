@@ -31,14 +31,15 @@ body {
 }
 
 /* Animação atualizada para o brilho roxo */
-@keyframes glow {
+ @keyframes glow {
   0% {
-    box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 5px rgba(55, 227, 89, 0.3);
   }
+
   100% {
-    box-shadow: 0 0 5px rgba(139, 92, 246, 0.7);
+    box-shadow: 0 0 5px rgba(55, 227, 89, 0.7);
   }
-}
+} 
 
 .glow {
   animation: glow 2s ease-in-out infinite alternate;

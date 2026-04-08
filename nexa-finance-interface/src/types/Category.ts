@@ -5,6 +5,7 @@ export interface Category {
   name: string;
   color: string;
   type: TransactionType;
+  userId: string;
 }
 
 export interface CategorySummary {

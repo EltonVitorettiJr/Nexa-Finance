@@ -7,6 +7,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
@@ -73,7 +74,7 @@ export const Transactions = () => {
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: explanation
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <Falso positivo do biome em funções declaradas fora do useEffect>
   useEffect(() => {
     fetchTransactions();
   }, [month, year]);
@@ -91,6 +92,28 @@ export const Transactions = () => {
     );
   };
 
+  const buildCsvData = () => {
+    const headers = ["Descrição", "Data", "Categoria", "Valor", "Tipo"];
+
+    const dataRows =
+      filteredTransactions?.map((t) => {
+        const formattedDate = new Date(t.date).toLocaleDateString("pt-BR");
+
+        const translatedType = t.type === "income" ? "Receita" : "Despesa";
+
+        const categoryName = t.category?.name || t.category;
+
+        return [
+          t.description,
+          formattedDate,
+          categoryName,
+          `R$ ${t.amount.toFixed(2)}`,
+          translatedType,
+        ];
+      }) || [];
+    return [headers, ...dataRows];
+  };
+
   return (
     <div className="container-app py-6">
       <div
@@ -100,7 +123,7 @@ export const Transactions = () => {
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Transações</h1>
         <div className="flex gap-2">
           <Link
-            to="/nova-categoria"
+            to="/categorias"
             className="bg-primary-500 text-[#051626] font-semibold
             px-4 py-2.5 rounded-xl flex items-center justify-center
             hover:bg-primary-600 transition-all"
@@ -172,6 +195,14 @@ export const Transactions = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
+            <CSVLink
+              data={buildCsvData()}
+              className="flex text-primary-500 text-xs items-center"
+            >
+              <ArrowDown className="w-4 h-4 mr-0.5" />
+              Baixar em csv
+            </CSVLink>
+
             <table className="divide-y divide-gray-700 h-full w-full">
               <thead>
                 <tr>

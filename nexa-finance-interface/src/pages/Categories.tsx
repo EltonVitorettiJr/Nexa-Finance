@@ -1,5 +1,11 @@
-import { AlertCircle, PaletteIcon, Save } from "lucide-react";
-import { type ChangeEvent, type FormEvent, useId, useState } from "react";
+import { AlertCircle, PaletteIcon, Save, Trash2Icon } from "lucide-react";
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useEffect,
+  useId,
+  useState,
+} from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
@@ -7,7 +13,12 @@ import Cards from "../components/Cards";
 import Input from "../components/Input";
 import TransactionTypeSelector from "../components/TransactionTypeSelector";
 import { useAuth } from "../context/AuthContext";
-import { createCategory } from "../services/categoryService";
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+} from "../services/categoryService";
+import type { Category } from "../types/Category";
 import { type CreateCategoryDTO, TransactionType } from "../types/Transactions";
 
 interface FormData {
@@ -24,7 +35,7 @@ const initialFormData = {
   userId: "",
 };
 
-export const CategoryForm = () => {
+export const Categories = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [error, setError] = useState<string>("");
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -32,6 +43,7 @@ export const CategoryForm = () => {
   const {
     authState: { user },
   } = useAuth();
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const navigate = useNavigate();
   const formId = useId();
@@ -65,7 +77,15 @@ export const CategoryForm = () => {
         userId: user?.uid as string,
       };
 
-      await createCategory(categoryData);
+      const response = await createCategory(categoryData);
+
+      setCategories((prev) => {
+        const updatedCategories = [...prev, response];
+
+        return updatedCategories.sort((a, b) => a.name.localeCompare(b.name));
+      });
+
+      setFormData(initialFormData);
 
       toast.success("Categoria cadastrada!");
     } catch (err) {
@@ -88,13 +108,33 @@ export const CategoryForm = () => {
   };
 
   const handleCancel = () => {
-    navigate("/transacoes");
+    navigate("/dashboard");
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await getCategories();
+
+      setCategories(response);
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Tem certeza que deseja deletar essa categoria?")) {
+      await deleteCategory(id);
+
+      setCategories((prev) => prev.filter((category) => category.id !== id));
+
+      toast.success("Categoria deletada.");
+    }
   };
 
   return (
-    <div className="container-app py-8">
-      <div className="max-w-100 mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Nova Categoria</h1>
+    <div className="container-app py-8 flex justify-center gap-16">
+      <div className="max-w-100 space-x-8">
+        <h1 className="text-2xl font-bold mb-6">Criar Categoria</h1>
 
         <Cards>
           {error && (
@@ -162,7 +202,7 @@ export const CategoryForm = () => {
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 mt-4">
               <Button
                 variant="outline"
                 onClick={handleCancel}
@@ -197,8 +237,60 @@ export const CategoryForm = () => {
           </form>
         </Cards>
       </div>
+      <div className="max-w-130 w-full">
+        <h1 className="text-2xl font-bold mb-6">Editar Categorias</h1>
+        <Cards className="overflow-y-auto h-115 pt-0">
+          <table className="w-full border-separate border-spacing-0">
+            <thead>
+              <tr>
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                  Nome
+                </th>
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                  Cor
+                </th>
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                  Tipo
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {categories.map((category) => (
+                <tr
+                  key={category.id}
+                  className="leading-8 hover:bg-gray-800/50"
+                >
+                  <td className="border-b border-gray-600">{category.name}</td>
+                  <td
+                    style={{ color: category.color }}
+                    className="border-b border-gray-600"
+                  >
+                    {category.color}
+                  </td>
+                  <td
+                    className={`${category.type === TransactionType.EXPENSE ? "text-red-600" : "text-green-600"}
+                    flex justify-between border-b border-gray-600`}
+                  >
+                    {category.type}
+                    {category.userId !== "global" && (
+                      <button
+                        type="button"
+                        className="bg-transparent border-none cursor-pointer mr-1"
+                        onClick={() => handleDelete(category.id)}
+                      >
+                        <Trash2Icon className="text-red-600 h-5 w-5" />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Cards>
+      </div>
     </div>
   );
 };
 
-export default CategoryForm;
+export default Categories;
