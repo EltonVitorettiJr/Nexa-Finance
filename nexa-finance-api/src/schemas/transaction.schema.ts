@@ -23,6 +23,8 @@ export const getTransactionsSchema = z.object({
     .refine(isValidObjectId, "Id de Categoria inválido.")
     .optional(),
   type: z.enum([TransactionType.expense, TransactionType.income]).optional(),
+  page: z.number().optional(),
+  perPage: z.number().optional(),
 });
 
 export const getSummaryTransactionsSchema = z.object({

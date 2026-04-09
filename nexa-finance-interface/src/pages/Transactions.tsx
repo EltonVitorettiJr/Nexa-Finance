@@ -7,18 +7,19 @@ import {
   Trash2,
 } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { CSVLink } from "react-csv";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
 import Cards from "../components/Cards";
 import Input from "../components/Input";
 import MonthYearSelect from "../components/MonthYearSelect";
+import SelectPageTransactions from "../components/SelectPageTransactions";
 import {
   deleteTransaction,
   getTransactions,
 } from "../services/transactionService";
 import { type Transaction, TransactionType } from "../types/Transactions";
+import { downloadTransactionsCsv } from "../utils/csvBuilder";
 import { formatCurrency, formatDate } from "../utils/Formatters";
 
 export const Transactions = () => {
@@ -29,19 +30,21 @@ export const Transactions = () => {
   const [deletingId, setDeletingId] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
-  const [transactions, setTransactions] = useState<Transaction[]>();
   const [filteredTransactions, setFilteredTransactions] =
     useState<Transaction[]>();
+  const [page, setPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(10);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
   const fetchTransactions = async (): Promise<void> => {
     try {
       setLoading(true);
       setError("");
 
-      const data = await getTransactions({ month, year });
+      const response = await getTransactions({ month, year, page, perPage });
 
-      setTransactions(data);
-      setFilteredTransactions(data);
+      setFilteredTransactions(response.data);
+      setTotalPages(response.meta.totalPages);
     } catch (err) {
       setError("Não foi possível carregar as transações, tente novamente.");
       console.log(err);
@@ -58,7 +61,11 @@ export const Transactions = () => {
 
       toast.success("Transação deletada.");
 
-      setFilteredTransactions((prev) => prev?.filter((t) => t.id !== id));
+      if (filteredTransactions?.length === 1 && page > 1) {
+        setPage(page - 1);
+      } else {
+        await fetchTransactions();
+      }
     } catch (err) {
       console.error(err);
 
@@ -77,41 +84,19 @@ export const Transactions = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <Falso positivo do biome em funções declaradas fora do useEffect>
   useEffect(() => {
     fetchTransactions();
-  }, [month, year]);
+  }, [month, year, page, perPage]);
 
   const handleSearchFilter = (event: ChangeEvent<HTMLInputElement>): void => {
     //é necessário colocar manualmente pois sem não é possível digitar no input
     setSearchText(event.target.value);
 
     setFilteredTransactions(
-      transactions?.filter((transaction) =>
+      filteredTransactions?.filter((transaction) =>
         transaction.description
           .toLocaleUpperCase()
           .includes(event.target.value.toUpperCase()),
       ),
     );
-  };
-
-  const buildCsvData = () => {
-    const headers = ["Descrição", "Data", "Categoria", "Valor", "Tipo"];
-
-    const dataRows =
-      filteredTransactions?.map((t) => {
-        const formattedDate = new Date(t.date).toLocaleDateString("pt-BR");
-
-        const translatedType = t.type === "income" ? "Receita" : "Despesa";
-
-        const categoryName = t.category?.name || t.category;
-
-        return [
-          t.description,
-          formattedDate,
-          categoryName,
-          `R$ ${t.amount.toFixed(2)}`,
-          translatedType,
-        ];
-      }) || [];
-    return [headers, ...dataRows];
   };
 
   return (
@@ -160,7 +145,7 @@ export const Transactions = () => {
         />
       </Cards>
 
-      <Cards className="overflow-hidden">
+      <Cards className="overflow-hidden flex flex-col items-center">
         {loading ? (
           <div className="flex items-center justify-center h-fit">
             <div
@@ -180,7 +165,7 @@ export const Transactions = () => {
               Tentar Novamente
             </Button>
           </div>
-        ) : transactions?.length === 0 ? (
+        ) : filteredTransactions?.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">Nenhuma transação encontrada.</p>
             <Link
@@ -194,14 +179,16 @@ export const Transactions = () => {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <CSVLink
-              data={buildCsvData()}
-              className="flex text-primary-500 text-xs items-center"
+          <div className="overflow-x-auto w-full">
+            <button
+              type="button"
+              className="flex text-primary-500 text-xs items-center border-none
+              cursor-pointer bg-transparent"
+              onClick={() => downloadTransactionsCsv(month, year)}
             >
               <ArrowDown className="w-4 h-4 mr-0.5" />
-              Baixar em csv
-            </CSVLink>
+              Exportar em csv
+            </button>
 
             <table className="divide-y divide-gray-700 h-full w-full">
               <thead>
@@ -305,6 +292,17 @@ export const Transactions = () => {
               </tbody>
             </table>
           </div>
+        )}
+
+        {!loading && !error && filteredTransactions?.length !== 0 && (
+          <SelectPageTransactions
+            onPageChange={setPage}
+            onPerPageChange={setPerPage}
+            page={page}
+            perPage={perPage}
+            totalPages={totalPages}
+            classname="mt-4"
+          />
         )}
       </Cards>
     </div>

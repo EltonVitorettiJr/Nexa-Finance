@@ -17,7 +17,7 @@ export const getTransactions = async (
     return reply.status(401).send("Usuário não autenticado.");
   }
 
-  const { month, year, categoryId, type } = request.query;
+  const { month, year, categoryId, type, page, perPage } = request.query;
 
   const filter: TransactionFilter = { userId };
 
@@ -39,6 +39,34 @@ export const getTransactions = async (
   }
 
   try {
+    if (page && perPage) {
+      const skip = (Number(page) - 1) * Number(perPage);
+      const take = Number(perPage);
+
+      const [transactions, totalItems] = await prisma.$transaction([
+        prisma.transaction.findMany({
+          where: filter,
+          skip,
+          take,
+          orderBy: { date: "desc" },
+          include: {
+            category: {
+              select: { color: true, name: true, type: true, userId: true },
+            },
+          },
+        }),
+
+        prisma.transaction.count({ where: filter }),
+      ]);
+
+      const totalPages = Math.ceil(totalItems / take);
+
+      return reply.status(200).send({
+        data: transactions,
+        meta: { totalItems, totalPages, currentPage: Number(page) },
+      });
+    }
+
     const transactions = await prisma.transaction.findMany({
       where: filter,
       orderBy: { date: "desc" },
@@ -54,7 +82,7 @@ export const getTransactions = async (
       },
     });
 
-    return reply.status(200).send(transactions);
+    return reply.status(200).send({ data: transactions });
   } catch (err) {
     reply.status(500).send(`❌Erro interno no servidor: ${err}`);
   }

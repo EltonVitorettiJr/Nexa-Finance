@@ -7,10 +7,21 @@ import type {
 } from "../types/Transactions";
 import { api } from "./api";
 
+interface MetaTransactionReply {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+interface GetTransactionsReply {
+  data: Transaction[];
+  meta: MetaTransactionReply;
+}
+
 export const getTransactions = async (
   filter?: Partial<TransactionFilter>,
-): Promise<Transaction[]> => {
-  const response = await api.get<Transaction[]>("/transactions", {
+): Promise<GetTransactionsReply> => {
+  const response = await api.get<GetTransactionsReply>("/transactions", {
     params: filter,
   });
 

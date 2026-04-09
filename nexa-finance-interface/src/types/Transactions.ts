@@ -43,6 +43,8 @@ export interface TransactionFilter {
   year: number;
   categoryId?: string;
   type?: typeof TransactionType;
+  page?: number;
+  perPage?: number;
 }
 
 export interface TransactionSummary {
