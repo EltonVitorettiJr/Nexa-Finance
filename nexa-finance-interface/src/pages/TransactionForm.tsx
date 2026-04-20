@@ -147,7 +147,7 @@ export const TransactionForm = () => {
 
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor={formId} className="mb-4 flex flex-col gap-2">
+              <label htmlFor={formId} className="mb-2 flex flex-col gap-2">
                 Tipo de Transação
               </label>
               <TransactionTypeSelector

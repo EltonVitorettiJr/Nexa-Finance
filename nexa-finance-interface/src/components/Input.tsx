@@ -25,7 +25,7 @@ const Input = ({
       {label && (
         <label
           htmlFor={InputId}
-          className="block text-sm font-medium text-gray-50 mb-2"
+          className="block text-sm font-medium text-gray-50 my-2"
         >
           {label}
         </label>

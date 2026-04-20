@@ -132,8 +132,8 @@ export const Categories = () => {
   };
 
   return (
-    <div className="container-app py-8 flex justify-center gap-16">
-      <div className="max-w-100 space-x-8">
+    <div className="container-app py-8 flex flex-col items-center justify-center md:gap-12 md:flex-row gap-8">
+      <div className="max-w-130 space-x-8 w-full">
         <h1 className="text-2xl font-bold mb-6">Criar Categoria</h1>
 
         <Cards>
@@ -150,7 +150,7 @@ export const Categories = () => {
 
           <form onSubmit={handleSubmit}>
             <div>
-              <label htmlFor={formId} className="mb-4 flex flex-col gap-2">
+              <label htmlFor={formId} className="mb-2 flex flex-col gap-2">
                 Tipo de Categoria
               </label>
               <TransactionTypeSelector
@@ -239,38 +239,38 @@ export const Categories = () => {
       </div>
       <div className="max-w-130 w-full">
         <h1 className="text-2xl font-bold mb-6">Editar Categorias</h1>
-        <Cards className="overflow-y-auto h-115 pt-0">
+        <Cards className="overflow-y-auto h-115 p-2">
           <table className="w-full border-separate border-spacing-0">
             <thead>
               <tr>
-                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-gray-300 text-left font-medium leading-9">
                   Nome
                 </th>
-                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-gray-300 text-left font-medium leading-9">
                   Cor
                 </th>
-                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-white text-left font-medium leading-9">
+                <th className="sticky top-0 bg-gray-900 z-10 border-b-2 border-gray-300 text-left font-medium leading-9">
                   Tipo
                 </th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="text-gray-400">
               {categories.map((category) => (
                 <tr
                   key={category.id}
                   className="leading-8 hover:bg-gray-800/50"
                 >
-                  <td className="border-b border-gray-600">{category.name}</td>
+                  <td className="border-b border-gray-700">{category.name}</td>
                   <td
                     style={{ color: category.color }}
-                    className="border-b border-gray-600"
+                    className="border-b border-gray-700"
                   >
                     {category.color}
                   </td>
                   <td
                     className={`${category.type === TransactionType.EXPENSE ? "text-red-600" : "text-green-600"}
-                    flex justify-between border-b border-gray-600`}
+                    flex justify-between border-b border-gray-700`}
                   >
                     {category.type}
                     {category.userId !== "global" && (

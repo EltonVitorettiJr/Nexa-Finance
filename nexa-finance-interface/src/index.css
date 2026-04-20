@@ -30,7 +30,7 @@ body {
   @apply max-w-7xl mx-auto px-4;
 }
 
-/* Animação atualizada para o brilho roxo */
+/* Animação atualizada para o brilho verde */
  @keyframes glow {
   0% {
     box-shadow: 0 0 5px rgba(55, 227, 89, 0.3);

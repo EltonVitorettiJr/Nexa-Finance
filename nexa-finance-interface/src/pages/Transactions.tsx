@@ -106,16 +106,7 @@ export const Transactions = () => {
         items-start md:items-center mb-6"
       >
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Transações</h1>
-        <div className="flex gap-2">
-          <Link
-            to="/categorias"
-            className="bg-primary-500 text-[#051626] font-semibold
-            px-4 py-2.5 rounded-xl flex items-center justify-center
-            hover:bg-primary-600 transition-all"
-          >
-            <Plus className="h-4 mr-2 w-4" />
-            Nova Categoria
-          </Link>
+        <div>
           <Link
             to="/nova-transacao"
             className="bg-primary-500 text-[#051626] font-semibold
