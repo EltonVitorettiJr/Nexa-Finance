@@ -19,13 +19,11 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@prisma/client": "^5.10.2",
-    "@recharts/devtools": "^0.0.11",
     "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
     "firebase-admin": "^13.6.0",
     "mongodb": "^7.0.0",
-    "recharts": "^3.8.1",
     "zod": "^4.1.13"
   }
 }
