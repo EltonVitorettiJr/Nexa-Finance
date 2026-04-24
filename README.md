@@ -5,7 +5,7 @@
 <p align="center">
 <a href="#art-sobre-o-projeto">Sobre o Projeto</a> |
 <a href="#computer-tecnologias-usadas">Tecnologias Usadas</a> |
-<a href="#package-como-rodar">Como Rodar</a>
+<a href="#package-como-rodar-o-projeto-localmente">Como Rodar</a>
 </p>
 
 # :art: Sobre o Projeto
